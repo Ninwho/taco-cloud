@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Controller
@@ -30,12 +31,19 @@ public class DesignTacoController {
         );
         Type[] types = Type.values();
         for(Type type : types) {
-            model.addAttribute(type.toString().toLowerCase(),filterByType(ingredients, type));
+            model.addAttribute(type.toString().toLowerCase(),
+                    filterByType(ingredients, type));
         }
 
         model.addAttribute("design", new Taco());
 
         return "design";
+    }
+
+    private List<Ingredient> filterByType(java.util.List<Ingredient> ingredients, Type type) {
+        return ingredients.stream()
+                .filter(x -> x.getType().equals(type))
+                .collect(Collectors.toList());
     }
 
 }
